@@ -1,0 +1,9 @@
+#!name=CapCut Only
+#!desc=CapCut-only routing rules for Shadowrocket. Does not unlock paid features.
+#!author=ChatGPT
+
+[Rule]
+DOMAIN-SUFFIX,capcut.com,PROXY
+DOMAIN-SUFFIX,capcutapi.com,PROXY
+DOMAIN-SUFFIX,capcut.net,PROXY
+DOMAIN-SUFFIX,capcutstatic.com,PROXY
