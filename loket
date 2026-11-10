@@ -1,0 +1,25 @@
+#!name= All In One Prerium
+#!desc= YouTube + Locket + SoundCloud + Spotify + nhiều app khác
+#Shadowrocket Unlock nhiều app vip
+
+[General]
+user-agent = Locket/1.0.0 (iPhone; iOS 26.3; Scale/3.00)
+
+[URL Rewrite]
+^https?:\/\/(us-central1-locket-4252a\.cloudfunctions\.net|api\.locketcamera\.com)\/generateFilteredImage https://locket-mod-backend.onrender.com/generateFilteredImage 307
+
+#Locket
+RevenueCat Response
+revenuecat = type=http-response, pattern=^https://api.revenuecat.com/.+/(receipts$|subscribers/[^/]+$), script-path=https://raw.githubusercontent.com/DrackSumy/shardow.vip/refs/heads/main/premium, requires-body=true, max-size=-1, timeout=60
+
+RevenueCat Request Header
+deleteHeader = type=http-request, pattern=^https://api.revenuecat.com/.+/(receipts|subscribers), script-path=https://raw.githubusercontent.com/DrackSumy/shardow.vip/refs/heads/main/premium2, timeout=60
+
+Locket Firebase Remote Config
+locket_rc = type=http-response, pattern=^https://firebaseremoteconfig.googleapis.com/v1/projects/locket-4252a/.+, script-path=https://raw.githubusercontent.com/DrackSumy/shardow.vip/refs/heads/main/premium4, requires-body=true, max-size=-1, timeout=6
+
+Locket Photobooth & AI Filters
+locket_pb_req = type=http-request,pattern=^https?:\/\/(us-central1-locket-4252a\.cloudfunctions\.net|api\.locketcamera\.com)\/generateFilteredImage,script-path=https://locket-vip.mhiep20077.workers.dev/js/Locket_Photobooth.js?v=20261108_47,requires-body=true,max-size=-1,timeout=60
+
+[MITM]
+hostname = %APPEND% us-central1-locket-4252a.cloudfunctions.net, api.locketcamera.com
