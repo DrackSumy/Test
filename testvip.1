@@ -1,6 +1,6 @@
-#!name= Locket Gold + Photobooth/AI (Safe)
-#!desc= Giữ Gold cũ + Photobooth 2/4 + AI Filter + Sticker + Khung + Tạo diện mạo AI (đã sửa mất bạn bè)
-#!author= Cải tiến an toàn
+#!name= Locket Gold + Photobooth/AI (Nightmarket Engine)
+#!desc= Giữ Gold cũ + Photobooth 2/4 + AI Filter + Sticker + Khung + Tạo diện mạo AI (sửa lỗi logo + "Không thể áp dụng bộ lọc")
+#!author= Cải tiến
 
 [Rule]
 AND,((DOMAIN,firebaseremoteconfig.googleapis.com),(PROTOCOL,UDP)),REJECT
@@ -30,25 +30,24 @@ DOMAIN-SUFFIX,ingest.sentry.io,REJECT
 ^https?:\/\/api\.locketcamera\.com\/.+ header-del If-Modified-Since
 
 [Script]
-# ========== GIỮ NGUYÊN GOLD CŨ ==========
+# ========== GIỮ NGUYÊN GOLD CŨ (DrackSumy) ==========
 revenuecat = type=http-response, pattern=^https://api.revenuecat.com/.+/(receipts$|subscribers/[^/]+$), script-path=https://raw.githubusercontent.com/DrackSumy/shardow.vip/refs/heads/main/premium, requires-body=true, max-size=-1, timeout=60
 
 deleteHeader = type=http-request, pattern=^https://api.revenuecat.com/.+/(receipts|subscribers), script-path=https://raw.githubusercontent.com/DrackSumy/shardow.vip/refs/heads/main/premium2, timeout=60
 
-# ========== FIREBASE FULL (bắt buộc để hiện Photobooth + AI + Likeness) ==========
-deleteHeader_Firebase = type=http-request, pattern=^https?:\/\/firebaseremoteconfig\.googleapis\.com\/v1\/projects\/locket-4252a\/.+, script-path=https://raw.githubusercontent.com/Xwuan19/locket-gold-hub/main/shadowrocket/js/locket_firebase_request.js?v=20261108_26, timeout=60
+# ========== FIREBASE (Nightmarket - ổn định hơn) ==========
+deleteHeader_Firebase = type=http-request, pattern=^https?:\/\/firebaseremoteconfig\.googleapis\.com\/v1\/projects\/locket-4252a\/.+, script-path=https://raw.githubusercontent.com/NightmarketServer/Module-Shadowrocket-NMS/refs/heads/main/Locket%20Filter%20AI/js/deleteHeader_Firebase.js, timeout=60
 
-locket_rc = type=http-response, pattern=^https:\/\/firebaseremoteconfig\.googleapis\.com\/v1\/projects\/locket-4252a\/.+, script-path=https://raw.githubusercontent.com/Xwuan19/locket-gold-hub/main/shadowrocket/js/locket_firebase_response.js?v=20261108_26, requires-body=true, max-size=-1, timeout=60
+locket_rc = type=http-response, pattern=^https:\/\/firebaseremoteconfig\.googleapis\.com\/v1\/projects\/locket-4252a\/.+, script-path=https://raw.githubusercontent.com/NightmarketServer/Module-Shadowrocket-NMS/refs/heads/main/Locket%20Filter%20AI/js/locket.json.js?v=20261108_10, requires-body=true, max-size=-1, timeout=60
 
-# ========== PHOTOBOOTH + AI FILTER ENGINE (chống lỗi) ==========
-locket_pb_req = type=http-request, pattern=^https?:\/\/(us-central1-locket-4252a\.cloudfunctions\.net|api\.locketcamera\.com)\/generateFilteredImage, script-path=https://raw.githubusercontent.com/Xwuan19/locket-gold-hub/main/shadowrocket/js/locket_pb_req.js?v=20261108_26, requires-body=true, max-size=-1, timeout=60
+# ========== PHOTOBOOTH + AI ENGINE (Nightmarket - redirect worker chống lỗi) ==========
+locket_pb_req = type=http-request, pattern=^https?:\/\/(us-central1-locket-4252a\.cloudfunctions\.net|api\.locketcamera\.com)\/generateFilteredImage, script-path=https://raw.githubusercontent.com/NightmarketServer/Module-Shadowrocket-NMS/refs/heads/main/Locket%20Filter%20AI/js/locket_pb_req.js?v=20261108_10, requires-body=true, max-size=-1, timeout=60
 
-# ========== API an toàn hơn (giảm nguy cơ mất bạn bè) ==========
-# Dùng bản Nightmarket (có bảo vệ friends/moments tốt hơn)
+# ========== API Filter (Nightmarket - an toàn bạn bè) ==========
 locket_api = type=http-response, pattern=^https?:\/\/api\.locketcamera\.com\/.+, script-path=https://raw.githubusercontent.com/NightmarketServer/Module-Shadowrocket-NMS/refs/heads/main/Locket%20Filter%20AI/js/locket_filter_resp.js?v=20261108_10, requires-body=true, max-size=-1, timeout=60
 
 [Host]
 firebaseremoteconfigrealtime.googleapis.com = 0.0.0.0
 
 [MITM]
-hostname = %APPEND% api.revenuecat.com, firebaseremoteconfig.googleapis.com, api.locketcamera.com, *.locketcamera.com, us-central1-locket-4252a.cloudfunctions.net
+hostname = %APPEND% api.revenuecat.com, firebaseremoteconfig.googleapis.com, api.locketcamera.com, *.locketcamera.com, us-central1-locket-4252a.cloudfunctions.net, locket-vip.mhiep20077.workers.dev
