@@ -1,12 +1,8 @@
-#!name= Locket Gold + AI/Photobooth Full
-#!desc= Giữ nguyên Locket Gold (premium4) + bổ sung Photobooth 2/4 ảnh + AI Filter + Sticker + Khung VIP + Tạo diện mạo AI
-# Cải thiện từ lockettest của DrackSumy
-
-[General]
-user-agent = Locket/1.0.0 (iPhone; iOS 18.0; Scale/3.00)
+#!name= Locket Gold + Photobooth & AI Full
+#!desc= Giữ Gold cũ (DrackSumy) + Photobooth 2/4 ảnh + AI Filter + Sticker + Khung VIP + Tạo diện mạo AI (đã tối ưu chống lỗi)
+#!author= Cải tiến dựa trên DrackSumy + Xwuan/Nightmarket
 
 [Rule]
-# Chặn QUIC/UDP để ép dùng TCP (tránh lỗi filter & photobooth)
 AND,((DOMAIN,firebaseremoteconfig.googleapis.com),(PROTOCOL,UDP)),REJECT
 AND,((DOMAIN,api.revenuecat.com),(PROTOCOL,UDP)),REJECT
 AND,((DOMAIN,api.locketcamera.com),(PROTOCOL,UDP)),REJECT
@@ -15,7 +11,7 @@ DOMAIN-SUFFIX,sentry.io,REJECT
 DOMAIN-SUFFIX,ingest.sentry.io,REJECT
 
 [Header Rewrite]
-# Xóa Cache / ETag trên RevenueCat
+# RevenueCat
 ^https?:\/\/api\.revenuecat\.com\/.+\/(receipts|subscribers) header-del x-revenuecat-etag
 ^https?:\/\/api\.revenuecat\.com\/.+\/(receipts|subscribers) header-del X-RevenueCat-ETag
 ^https?:\/\/api\.revenuecat\.com\/.+\/(receipts|subscribers) header-del if-none-match
@@ -23,38 +19,34 @@ DOMAIN-SUFFIX,ingest.sentry.io,REJECT
 ^https?:\/\/api\.revenuecat\.com\/.+\/(receipts|subscribers) header-del if-modified-since
 ^https?:\/\/api\.revenuecat\.com\/.+\/(receipts|subscribers) header-del If-Modified-Since
 
-# Xóa Cache / ETag trên Firebase Remote Config
+# Firebase
 ^https?:\/\/firebaseremoteconfig\.googleapis\.com\/v1\/projects\/locket-4252a\/.+ header-del if-none-match
 ^https?:\/\/firebaseremoteconfig\.googleapis\.com\/v1\/projects\/locket-4252a\/.+ header-del If-None-Match
 ^https?:\/\/firebaseremoteconfig\.googleapis\.com\/v1\/projects\/locket-4252a\/.+ header-del if-modified-since
 ^https?:\/\/firebaseremoteconfig\.googleapis\.com\/v1\/projects\/locket-4252a\/.+ header-del If-Modified-Since
 ^https?:\/\/firebaseremoteconfig\.googleapis\.com\/v1\/projects\/locket-4252a\/.+ header-del x-goog-if-none-match
 
-# Xóa Cache / ETag trên Locket Camera API
+# Locket API
 ^https?:\/\/api\.locketcamera\.com\/.+ header-del if-none-match
 ^https?:\/\/api\.locketcamera\.com\/.+ header-del If-None-Match
 ^https?:\/\/api\.locketcamera\.com\/.+ header-del if-modified-since
 ^https?:\/\/api\.locketcamera\.com\/.+ header-del If-Modified-Since
 
 [Script]
-# ==================== GIỮ NGUYÊN LOCKET GOLD CŨ ====================
-# RevenueCat Response (Gold cũ)
+# ========== GIỮ NGUYÊN GOLD CŨ (DrackSumy) ==========
 revenuecat = type=http-response, pattern=^https://api.revenuecat.com/.+/(receipts$|subscribers/[^/]+$), script-path=https://raw.githubusercontent.com/DrackSumy/shardow.vip/refs/heads/main/premium, requires-body=true, max-size=-1, timeout=60
 
-# RevenueCat Request Header (Gold cũ)
 deleteHeader = type=http-request, pattern=^https://api.revenuecat.com/.+/(receipts|subscribers), script-path=https://raw.githubusercontent.com/DrackSumy/shardow.vip/refs/heads/main/premium2, timeout=60
 
-# Firebase Remote Config (GIỮ NGUYÊN premium4)
-locket_rc = type=http-response, pattern=^https://firebaseremoteconfig.googleapis.com/v1/projects/locket-4252a/.+, script-path=https://raw.githubusercontent.com/DrackSumy/shardow.vip/refs/heads/main/premium4, requires-body=true, max-size=-1, timeout=60
-
-# ==================== BỔ SUNG TÍNH NĂNG MỚI ====================
-# 1. Xóa header cache Firebase (để nhận config mới)
+# ========== FIREBASE FULL (bật Photobooth + AI + Likeness + Khung) ==========
 deleteHeader_Firebase = type=http-request, pattern=^https?:\/\/firebaseremoteconfig\.googleapis\.com\/v1\/projects\/locket-4252a\/.+, script-path=https://raw.githubusercontent.com/Xwuan19/locket-gold-hub/main/shadowrocket/js/locket_firebase_request.js?v=20261108_26, timeout=60
 
-# 2. Locket API: Huy hiệu Gold + bypass paywall + unblur ảnh filter
+locket_rc = type=http-response, pattern=^https:\/\/firebaseremoteconfig\.googleapis\.com\/v1\/projects\/locket-4252a\/.+, script-path=https://raw.githubusercontent.com/Xwuan19/locket-gold-hub/main/shadowrocket/js/locket_firebase_response.js?v=20261108_26, requires-body=true, max-size=-1, timeout=60
+
+# ========== LOCKET API (huy hiệu + unblur + bypass paywall) ==========
 locket_api = type=http-response, pattern=^https?:\/\/api\.locketcamera\.com\/.+, script-path=https://raw.githubusercontent.com/Xwuan19/locket-gold-hub/main/shadowrocket/js/locket_filter_response.js?v=20261108_26, requires-body=true, max-size=-1, timeout=60
 
-# 3. PHOTOBOOTH 2/4 ẢNH + AI FILTER ENGINE (quan trọng nhất - chống lỗi "Không thể áp dụng bộ lọc")
+# ========== PHOTOBOOTH 2/4 ẢNH + AI FILTER ENGINE (chống lỗi chính) ==========
 locket_pb_req = type=http-request, pattern=^https?:\/\/(us-central1-locket-4252a\.cloudfunctions\.net|api\.locketcamera\.com)\/generateFilteredImage, script-path=https://raw.githubusercontent.com/Xwuan19/locket-gold-hub/main/shadowrocket/js/locket_pb_req.js?v=20261108_26, requires-body=true, max-size=-1, timeout=60
 
 [Host]
