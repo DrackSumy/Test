@@ -1,6 +1,6 @@
-#!name= Locket Gold + Photobooth & AI Full
-#!desc= Giữ Gold cũ (DrackSumy) + Photobooth 2/4 ảnh + AI Filter + Sticker + Khung VIP + Tạo diện mạo AI (đã tối ưu chống lỗi)
-#!author= Cải tiến dựa trên DrackSumy + Xwuan/Nightmarket
+#!name= Locket Gold + Photobooth/AI (Safe)
+#!desc= Giữ Gold cũ + Photobooth 2/4 + AI Filter + Sticker + Khung + Tạo diện mạo AI (đã sửa mất bạn bè)
+#!author= Cải tiến an toàn
 
 [Rule]
 AND,((DOMAIN,firebaseremoteconfig.googleapis.com),(PROTOCOL,UDP)),REJECT
@@ -11,7 +11,6 @@ DOMAIN-SUFFIX,sentry.io,REJECT
 DOMAIN-SUFFIX,ingest.sentry.io,REJECT
 
 [Header Rewrite]
-# RevenueCat
 ^https?:\/\/api\.revenuecat\.com\/.+\/(receipts|subscribers) header-del x-revenuecat-etag
 ^https?:\/\/api\.revenuecat\.com\/.+\/(receipts|subscribers) header-del X-RevenueCat-ETag
 ^https?:\/\/api\.revenuecat\.com\/.+\/(receipts|subscribers) header-del if-none-match
@@ -19,35 +18,34 @@ DOMAIN-SUFFIX,ingest.sentry.io,REJECT
 ^https?:\/\/api\.revenuecat\.com\/.+\/(receipts|subscribers) header-del if-modified-since
 ^https?:\/\/api\.revenuecat\.com\/.+\/(receipts|subscribers) header-del If-Modified-Since
 
-# Firebase
 ^https?:\/\/firebaseremoteconfig\.googleapis\.com\/v1\/projects\/locket-4252a\/.+ header-del if-none-match
 ^https?:\/\/firebaseremoteconfig\.googleapis\.com\/v1\/projects\/locket-4252a\/.+ header-del If-None-Match
 ^https?:\/\/firebaseremoteconfig\.googleapis\.com\/v1\/projects\/locket-4252a\/.+ header-del if-modified-since
 ^https?:\/\/firebaseremoteconfig\.googleapis\.com\/v1\/projects\/locket-4252a\/.+ header-del If-Modified-Since
 ^https?:\/\/firebaseremoteconfig\.googleapis\.com\/v1\/projects\/locket-4252a\/.+ header-del x-goog-if-none-match
 
-# Locket API
 ^https?:\/\/api\.locketcamera\.com\/.+ header-del if-none-match
 ^https?:\/\/api\.locketcamera\.com\/.+ header-del If-None-Match
 ^https?:\/\/api\.locketcamera\.com\/.+ header-del if-modified-since
 ^https?:\/\/api\.locketcamera\.com\/.+ header-del If-Modified-Since
 
 [Script]
-# ========== GIỮ NGUYÊN GOLD CŨ (DrackSumy) ==========
+# ========== GIỮ NGUYÊN GOLD CŨ ==========
 revenuecat = type=http-response, pattern=^https://api.revenuecat.com/.+/(receipts$|subscribers/[^/]+$), script-path=https://raw.githubusercontent.com/DrackSumy/shardow.vip/refs/heads/main/premium, requires-body=true, max-size=-1, timeout=60
 
 deleteHeader = type=http-request, pattern=^https://api.revenuecat.com/.+/(receipts|subscribers), script-path=https://raw.githubusercontent.com/DrackSumy/shardow.vip/refs/heads/main/premium2, timeout=60
 
-# ========== FIREBASE FULL (bật Photobooth + AI + Likeness + Khung) ==========
+# ========== FIREBASE FULL (bắt buộc để hiện Photobooth + AI + Likeness) ==========
 deleteHeader_Firebase = type=http-request, pattern=^https?:\/\/firebaseremoteconfig\.googleapis\.com\/v1\/projects\/locket-4252a\/.+, script-path=https://raw.githubusercontent.com/Xwuan19/locket-gold-hub/main/shadowrocket/js/locket_firebase_request.js?v=20261108_26, timeout=60
 
 locket_rc = type=http-response, pattern=^https:\/\/firebaseremoteconfig\.googleapis\.com\/v1\/projects\/locket-4252a\/.+, script-path=https://raw.githubusercontent.com/Xwuan19/locket-gold-hub/main/shadowrocket/js/locket_firebase_response.js?v=20261108_26, requires-body=true, max-size=-1, timeout=60
 
-# ========== LOCKET API (huy hiệu + unblur + bypass paywall) ==========
-locket_api = type=http-response, pattern=^https?:\/\/api\.locketcamera\.com\/.+, script-path=https://raw.githubusercontent.com/Xwuan19/locket-gold-hub/main/shadowrocket/js/locket_filter_response.js?v=20261108_26, requires-body=true, max-size=-1, timeout=60
-
-# ========== PHOTOBOOTH 2/4 ẢNH + AI FILTER ENGINE (chống lỗi chính) ==========
+# ========== PHOTOBOOTH + AI FILTER ENGINE (chống lỗi) ==========
 locket_pb_req = type=http-request, pattern=^https?:\/\/(us-central1-locket-4252a\.cloudfunctions\.net|api\.locketcamera\.com)\/generateFilteredImage, script-path=https://raw.githubusercontent.com/Xwuan19/locket-gold-hub/main/shadowrocket/js/locket_pb_req.js?v=20261108_26, requires-body=true, max-size=-1, timeout=60
+
+# ========== API an toàn hơn (giảm nguy cơ mất bạn bè) ==========
+# Dùng bản Nightmarket (có bảo vệ friends/moments tốt hơn)
+locket_api = type=http-response, pattern=^https?:\/\/api\.locketcamera\.com\/.+, script-path=https://raw.githubusercontent.com/NightmarketServer/Module-Shadowrocket-NMS/refs/heads/main/Locket%20Filter%20AI/js/locket_filter_resp.js?v=20261108_10, requires-body=true, max-size=-1, timeout=60
 
 [Host]
 firebaseremoteconfigrealtime.googleapis.com = 0.0.0.0
