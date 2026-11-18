@@ -1,20 +1,17 @@
 // ============================================================
-// Locket Remote Config Rewrite - premium4 cải tiến
-// Bổ sung: Photobooth 2/4 + AI Filter + Sticker + Khung + Tạo diện mạo AI
+// Locket Remote Config Rewrite
 // Endpoint: firebaseremoteconfig.googleapis.com
-// ============================================================
+// Đã bổ sung: Photobooth + AI Filters (giữ nguyên cấu trúc & nội dung gốc)
 
 var ua = $request.headers["User-Agent"] || $request.headers["user-agent"] || "";
 var obj = JSON.parse($response.body);
 
 if (ua.includes("Locket")) {
-    obj.Attention = "Chúc mừng bạn! Đã kích hoạt Photobooth + AI Filter + Tạo diện mạo AI";
+    obj.Attention = "Chúc mừng bạn! Vui lòng không bán hoặc chia sẻ cho người khác!";
     obj.entries = obj.entries || {};
-    obj.entries.cache_ttl_seconds = "0";
-    obj.entries.client_cache_ttl_sec = "0";
 
     // ============================================================
-    // 1. CẤU HÌNH GOLD + FEATURE GATES (ĐÃ BỔ SUNG ĐẦY ĐỦ)
+    // 1. CẤU HÌNH GOLD, FEATURE GATES & PAYWALL
     // ============================================================
     Object.assign(obj.entries, {
         feature_gates: JSON.stringify({
@@ -31,13 +28,7 @@ if (ua.includes("Locket")) {
             video: "enabled",
             custom_widget_frames: "enabled",
             streak_recovery: "enabled",
-            // ===== BỔ SUNG QUAN TRỌNG =====
-            longer_videos: "enabled",
-            longer_camera_roll_videos: "enabled",
-            camera_roll_video: "enabled",
-            camera_roll_video_upload: "enabled",
-            camera_roll_longer_videos: "enabled",
-            video_trimmer: "enabled",
+            // === BỔ SUNG CHO AI + PHOTOBOOTH ===
             camera_filter: "enabled",
             camera_filters: "enabled",
             filters: "enabled",
@@ -46,16 +37,47 @@ if (ua.includes("Locket")) {
             likeness: "enabled",
             ai_likeness: "enabled",
             create_likeness: "enabled",
-            likeness_creation: "enabled",
             face_filter: "enabled",
-            face_filters: "enabled",
-            ai_styles: "enabled",
-            ai_style: "enabled",
-            avatars: "enabled",
-            avatar: "enabled"
+            face_filters: "enabled"
         }),
-
-        // Bật các cờ riêng lẻ
+        upsell_features: JSON.stringify({
+            app_icon_picker: true,
+            camera_roll: true,
+            camera_theme: true,
+            locket_views: true,
+            remove_ads: true,
+            custom_widget_frames: true
+        }),
+        paywall_presentation_config: JSON.stringify({
+            uid: "paywall_testflight",
+            onboarding: false,
+            after_sent_moment: false,
+            on_foreground: false,
+            interval: 2592000,
+            profile_banner: true
+        }),
+        feature_discovery_popup_config: JSON.stringify({
+            tag: "LOCKET GOLD PXT",
+            tag_gradient: true,
+            tag_style: "gold_gradient",
+            title: "Đã Kich Hoạt Thành Công💛",
+            feature_set: [
+                {
+                    title: "Chúc Mừng Bạn Đã Up Locket Gold Thành Công✨",
+                    body: "Nhớ Follow Kênh Ủng Hộ Mình Nhé 💛",
+                    imageURL: "https://i.postimg.cc/4Nq9DFsS/07C0FD9F-394F-4ECE-B084-281BAFB89D8D.png"
+                }
+            ],
+            primary_button_title: "Xong",
+            campaign: "locket_gold_welcome_v3",
+            start_at: "2020-01-01T00:00:00",
+            end_at: "2099-12-31T23:59:59",
+            use_local_time_zone: true
+        }),
+        android_subscribe_gold_button_enabled: "false",
+        profile_badge_visible: "true",
+        lunar_new_year_app_icon_enabled: "true",
+        // === BỔ SUNG FLAG CHO FILTER ===
         camera_filter_enabled: "true",
         camera_filters_enabled: "true",
         filters_enabled: "true",
@@ -65,58 +87,11 @@ if (ua.includes("Locket")) {
         camera_ai_filters_enabled: "true",
         likeness_enabled: "true",
         ai_likeness_enabled: "true",
-        create_likeness_enabled: "true",
-        likeness_creation_enabled: "true",
-        camera_filter_likeness_enabled: "true",
-        camera_likeness_enabled: "true",
-        face_filters_enabled: "true",
-        face_filter_enabled: "true",
-        ai_styles_enabled: "true",
-
-        upsell_features: JSON.stringify({
-            app_icon_picker: true,
-            camera_roll: true,
-            camera_theme: true,
-            locket_views: true,
-            remove_ads: true,
-            custom_widget_frames: true
-        }),
-
-        paywall_presentation_config: JSON.stringify({
-            uid: "paywall_testflight",
-            onboarding: false,
-            after_sent_moment: false,
-            on_foreground: false,
-            interval: 2592000,
-            profile_banner: true
-        }),
-
-        feature_discovery_popup_config: JSON.stringify({
-            tag: "LOCKET GOLD + AI",
-            tag_gradient: true,
-            tag_style: "gold_gradient",
-            title: "Đã Kích Hoạt Thành Công💛",
-            feature_set: [
-                {
-                    title: "Locket Gold + Photobooth & AI ✨",
-                    body: "Photobooth 2/4 ảnh • AI Filter • Sticker • Khung VIP • Tạo diện mạo AI",
-                    imageURL: "https://i.postimg.cc/4Nq9DFsS/07C0FD9F-394F-4ECE-B084-281BAFB89D8D.png"
-                }
-            ],
-            primary_button_title: "Bắt Đầu",
-            campaign: "locket_gold_welcome_v3",
-            start_at: "2020-01-01T00:00:00",
-            end_at: "2099-12-31T23:59:59",
-            use_local_time_zone: true
-        }),
-
-        android_subscribe_gold_button_enabled: "false",
-        profile_badge_visible: "true",
-        lunar_new_year_app_icon_enabled: "true"
+        create_likeness_enabled: "true"
     });
 
     // ============================================================
-    // 2. CHẶN QUẢNG CÁO & TẮT TRACKING
+    // 2. CHẶN QUẢNG CÁO & TẮT TRACKING (SENTRY)
     // ============================================================
     Object.assign(obj.entries, {
         history_ads_mode: "off",
@@ -137,17 +112,14 @@ if (ua.includes("Locket")) {
     });
 
     // ============================================================
-    // 3. CAMERA, VIDEO, FILTERS (tăng thời lượng + bật filter)
+    // 3. CAMERA, VIDEO, FILTERS & UPLOAD QUALITY
     // ============================================================
     Object.assign(obj.entries, {
         camera: JSON.stringify({
-            gold_max_duration: 60.0,
-            goldMaxDuration: 60.0,
-            max_duration: 60.0,
-            maxDuration: 60.0,
-            video_max_duration: 60.0,
-            videoMaxDuration: 60.0,
-            duration: 60.0,
+            gold_max_duration: 30.0,
+            goldMaxDuration: 30.0,
+            max_duration: 30.0,
+            maxDuration: 30.0,
             ultra_wide: true,
             ultraWide: true,
             volume_button: true,
@@ -157,41 +129,21 @@ if (ua.includes("Locket")) {
             srgb: true,
             lanczos: true,
             quality_mbps: 0.9,
-            qualityMbps: 0.9,
-            video_sound_enabled: true,
-            microphone_enabled: true,
-            camera_microphone_enabled: true,
-            audio_enabled: true
+            qualityMbps: 0.9
         }),
         camera_roll: JSON.stringify({
-            enabled: true,
-            video_enabled: true,
-            video_upload_enabled: true,
-            longer_videos_enabled: true,
-            gold_max_duration: 60.0,
-            goldMaxDuration: 60.0,
-            video_max_duration: 60.0,
-            videoMaxDuration: 60.0,
-            max_duration: 60.0,
-            maxDuration: 60.0,
-            trim_max_duration: 60.0,
-            trimMaxDuration: 60.0,
-            camera_roll_max_duration: 60.0,
-            cameraRollMaxDuration: 60.0,
-            max_video_duration: 60.0,
-            maxVideoDuration: 60.0,
-            duration: 60.0,
+            gold_max_duration: 30.0,
+            goldMaxDuration: 30.0,
+            video_max_duration: 30.0,
+            videoMaxDuration: 30.0,
+            max_duration: 30.0,
+            maxDuration: 30.0,
+            trim_max_duration: 30.0,
+            trimMaxDuration: 30.0,
+            camera_roll_max_duration: 30.0,
             quality_mbps: 0.9,
             qualityMbps: 0.9,
-            flash_button: true,
-            video_sound_enabled: true,
-            microphone_enabled: true,
-            audio_enabled: true,
-            sound_enabled: true,
-            trimmer: {
-                max_duration: 60.0,
-                gold_max_duration: 60.0
-            }
+            flash_button: true
         }),
         live_photos: JSON.stringify({
             capture: true,
@@ -200,28 +152,51 @@ if (ua.includes("Locket")) {
             widget_looping_mode: "never"
         }),
 
-        // Giữ camera_filter_config gốc của premium4 + mở rộng
+        // === PHẦN ĐÃ BỔ SUNG PHOTOBOOTH + AI ===
         camera_filter_config: JSON.stringify({
             allows_custom_filters: true,
+            allowsCustomFilters: true,
             show_filter_button: true,
+            showFilterButton: true,
             sheet_enabled: true,
+            sheetEnabled: true,
             open_sheet_immediately: true,
+            openSheetImmediately: true,
+            reference_image_attachment_enabled: true,
+            referenceImageAttachmentEnabled: true,
+
             sheet_filters: [
-                { title: { en: "Goofy" }, filter_ids: ["okay_wig", "influencer", "looks_maxxing", "toothless", "bye_brows"] },
-                { title: { en: "Looks" }, filter_ids: ["bowling_ball", "blonde_bleached", "beard", "bob_cut", "buns", "tatted", "mohawk", "braces", "bye_brows"] },
-                { title: { en: "Celebrate" }, filter_ids: ["slimed", "princess", "disco_lights", "cash_money", "happy_birthday"] },
-                { title: { en: "Cute" }, filter_ids: ["cutesy", "sticker_face", "flower_crown", "love_bug"] },
-                { title: { en: "Costumes" }, filter_ids: ["wedding", "cowboy_cowgirl", "giraffe", "clown"] },
-                { title: { en: "Holidays" }, filter_ids: ["easter_bunney_cutout", "easter_chick_cutout", "bearded", "leprechaun", "lucky_face", "sweet_hearts", "elf_cutout", "santa_cutout", "frosty"] }
+                // Giữ nguyên nhóm gốc của bạn
+                { title: { en: "Goofy", vi: "Hài hước" }, filter_ids: ["okay_wig", "influencer", "looks_maxxing", "toothless", "bye_brows"] },
+                { title: { en: "Looks", vi: "Phong cách" }, filter_ids: ["bowling_ball", "blonde_bleached", "beard", "bob_cut", "buns", "tatted", "mohawk", "braces", "bye_brows"] },
+                { title: { en: "Celebrate", vi: "Lễ hội" }, filter_ids: ["slimed", "princess", "disco_lights", "cash_money", "happy_birthday"] },
+                { title: { en: "Cute", vi: "Dễ thương" }, filter_ids: ["cutesy", "sticker_face", "flower_crown", "love_bug"] },
+                { title: { en: "Costumes", vi: "Hóa trang" }, filter_ids: ["wedding", "cowboy_cowgirl", "giraffe", "clown"] },
+                { title: { en: "Holidays", vi: "Ngày lễ" }, filter_ids: ["easter_bunney_cutout", "easter_chick_cutout", "bearded", "leprechaun", "lucky_face", "sweet_hearts", "elf_cutout", "santa_cutout", "frosty"] },
+
+                // === NHÓM MỚI THÊM ===
+                { title: { en: "Photobooth 📸", vi: "Photobooth 📸" }, filter_ids: ["photobooth_4cut", "photobooth_cute", "pb_holo_4cut", "pb_scrapbook_ripped_4cut", "pb_ripped_paper_4cut", "pb_denim_ripped_2x2", "frame_classic_pb", "frame_berry_days", "frame_happy_snap", "frame_sky_diary"] },
+                { title: { en: "AI Filters ✨", vi: "AI Filters ✨" }, filter_ids: ["stk_rose_flower", "stk_shrek_ogre", "stk_superhero_cape", "stk_spooky_ghost", "stk_pirate_hat", "stk_volcano_lava", "stk_rain_storm", "stk_fortnite_llama", "stk_watercolor_art", "stk_golden_hour", "stk_jungle_leaf", "stk_cute_zombie", "stk_fireworks", "stk_new_year_2026", "stk_harry_potter", "stk_minecraft", "stk_fire_flame"] }
             ],
+
             picker_filters: [
+                // Giữ nguyên filter gốc
                 "okay_wig", "influencer", "looks_maxxing", "toothless", "bye_brows",
                 "bowling_ball", "blonde_bleached", "beard", "bob_cut", "buns",
                 "tatted", "mohawk", "braces", "slimed", "princess",
                 "disco_lights", "cash_money", "happy_birthday", "cutesy", "sticker_face",
                 "flower_crown", "love_bug", "wedding", "cowboy_cowgirl", "giraffe",
                 "clown", "easter_bunney_cutout", "easter_chick_cutout", "bearded", "leprechaun",
-                "lucky_face", "sweet_hearts", "elf_cutout", "santa_cutout", "frosty"
+                "lucky_face", "sweet_hearts", "elf_cutout", "santa_cutout", "frosty",
+
+                // === FILTER MỚI ===
+                "photobooth_4cut", "photobooth_cute", "pb_holo_4cut", "pb_scrapbook_ripped_4cut",
+                "pb_ripped_paper_4cut", "pb_denim_ripped_2x2", "frame_classic_pb",
+                "frame_berry_days", "frame_happy_snap", "frame_sky_diary",
+                "stk_rose_flower", "stk_shrek_ogre", "stk_superhero_cape", "stk_spooky_ghost",
+                "stk_pirate_hat", "stk_volcano_lava", "stk_rain_storm", "stk_fortnite_llama",
+                "stk_watercolor_art", "stk_golden_hour", "stk_jungle_leaf", "stk_cute_zombie",
+                "stk_fireworks", "stk_new_year_2026", "stk_harry_potter", "stk_minecraft", "stk_fire_flame"
             ]
         }),
 
@@ -230,15 +205,15 @@ if (ua.includes("Locket")) {
         camera_roll_video_upload_enabled: "true",
         internal_camera_roll_video_upload_enabled: "true",
         longer_camera_roll_videos_enabled: "true",
-        camera_roll_video_max_duration: "60.0",
-        camera_roll_max_duration: "60.0",
-        camera_roll_duration: "60.0",
-        max_video_duration: "60.0",
-        video_max_duration: "60.0",
-        video_trim_max_duration: "60.0",
-        trim_max_duration: "60.0",
-        gold_max_duration: "60.0",
-        goldMaxDuration: "60.0",
+        camera_roll_video_max_duration: "30.0",
+        camera_roll_max_duration: "30.0",
+        camera_roll_duration: "30.0",
+        max_video_duration: "30.0",
+        video_max_duration: "30.0",
+        video_trim_max_duration: "30.0",
+        trim_max_duration: "30.0",
+        gold_max_duration: "30.0",
+        goldMaxDuration: "30.0",
         video_quality_mbps: "0.9",
         video_sound_enabled: "true",
         microphone_enabled: "true",
@@ -253,7 +228,7 @@ if (ua.includes("Locket")) {
     });
 
     // ============================================================
-    // 4. BẠN BÈ (giữ nguyên)
+    // 4. BẠN BÈ, GIỚI HẠN & ĐỀ XUẤT KẾT BẠN
     // ============================================================
     Object.assign(obj.entries, {
         max_friends_count: "999999",
@@ -305,7 +280,7 @@ if (ua.includes("Locket")) {
     });
 
     // ============================================================
-    // 5. MOMENTS, STREAK, CHAT (giữ nguyên)
+    // 5. MOMENTS, STREAK, CHAT & TƯƠNG TÁC
     // ============================================================
     try {
         var streak = JSON.parse(obj.entries.streak_config || "{}");
@@ -345,7 +320,7 @@ if (ua.includes("Locket")) {
     });
 
     // ============================================================
-    // 6. WIDGET + KHUNG VIP (giữ + cải thiện)
+    // 6. WIDGET, THÔNG BÁO & GIAO DIỆN (JOURNAL / PROFILE)
     // ============================================================
     Object.assign(obj.entries, {
         widget_frame_event_max_images: "5",
@@ -356,7 +331,7 @@ if (ua.includes("Locket")) {
         widget_last_sent_indicator: "false",
         widget_sync_token_reload_mode: "clearTokenNever",
         widget_frame_event: JSON.stringify({
-            uid: "midautumn_2026",
+            uid: "midautumn_2026",            
             url: "https://i.postimg.cc/fbY7MGdR/hlw.png",
             use_local_time_zone: true,
             placement: "below",
@@ -372,9 +347,23 @@ if (ua.includes("Locket")) {
         notification_reply_body_visible: "true",
         prompt_notification_permissions_after_friending: "true",
         activity_bar_enabled: "true",
-        journal_activity_bar_enabled: "true"
+        journal_activity_bar_enabled: "true",
+        journal_settings: JSON.stringify({
+            debug_menu_enabled: false,
+            focus_animation: true,
+            compact_header: true,
+            friends_button: true,
+            reverse_scroll_direction: false,
+            streak_visualization: true,
+            streak_visualization_style: "gradient",
+            streak_header_minimum_count: 0,
+            streak_visualization_minimum_count: 2,
+            overlay_indicators: { location: true, music: true, static_content: true, weather: true }
+        }),
+        qr_code_config: JSON.stringify({ profile_enabled: true, scanning_enabled: true }),
+        custom_profile_pics: "true",
+        profile_menu_v2_enabled: "true"
     });
-}
 
     // ============================================================
     // 7. HỆ THỐNG, CACHE & STORAGE CDN
