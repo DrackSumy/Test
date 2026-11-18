@@ -5,6 +5,15 @@
 [General]
 user-agent = Locket/1.0.0 (iPhone; iOS 26.3; Scale/3.00)
 
+[Header Rewrite]
+^https?:\/\/(api|rc-backup)\.revenuecat\.com\/v1\/(subscribers|receipts).* header-del X-RevenueCat-ETag
+^https?:\/\/(api|rc-backup)\.revenuecat\.com\/v1\/(subscribers|receipts).* header-del If-None-Match
+^https?:\/\/(api|rc-backup)\.revenuecat\.com\/v1\/(subscribers|receipts).* header-del If-Modified-Since
+
+^https?:\/\/.*firebaseremoteconfig.*\.googleapis\.com\/.* header-del If-None-Match
+^https?:\/\/.*firebaseremoteconfig.*\.googleapis\.com\/.* header-del If-Modified-Since
+^https?:\/\/.*firebaseremoteconfig.*\.googleapis\.com\/.* header-del ETag
+
 [Script]
 # ~ Locket Gold - Shadowrocket / Surge / LanceX
 
