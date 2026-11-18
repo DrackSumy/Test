@@ -6,16 +6,27 @@
 user-agent = Locket/1.0.0 (iPhone; iOS 26.3; Scale/3.00)
 
 [Script]
-# ~ Locket Gold - Shadowrocket / Surge / LanceX
-
-RevenueCat Response
+# ===== PHẦN CỦA BẠN (GIỮ NGUYÊN) =====
 revenuecat = type=http-response, pattern=^https://api.revenuecat.com/.+/(receipts$|subscribers/[^/]+$), script-path=https://raw.githubusercontent.com/DrackSumy/shardow.vip/refs/heads/main/premium, requires-body=true, max-size=-1, timeout=60
 
-RevenueCat Request Header
 deleteHeader = type=http-request, pattern=^https://api.revenuecat.com/.+/(receipts|subscribers), script-path=https://raw.githubusercontent.com/DrackSumy/shardow.vip/refs/heads/main/premium2, timeout=60
 
-Locket Firebase Remote Config
-locket_rc = type=http-response, pattern=^https://firebaseremoteconfig.googleapis.com/v1/projects/locket-4252a/.+, script-path=https://raw.githubusercontent.com/DrackSumy/Test/refs/heads/main/loket, requires-body=true, max-size=-1, timeout=60
+# Firebase Remote Config của bạn (giữ nguyên text, icon, popup...)
+locket_rc = type=http-response, pattern=^https://firebaseremoteconfig.googleapis.com/v1/projects/locket-4252a/.+, script-path=https://raw.githubusercontent.com/DrackSumy/shardow.vip/refs/heads/main/premium4, requires-body=true, max-size=-1, timeout=60
+
+# ===== THÊM MỚI – CHỈ ĐỂ HIỆN + DÙNG PHOTOBOOTH + AI =====
+# 1. Xóa cache header Firebase
+deleteHeader_Firebase = type=http-request, pattern=^https?:\/\/firebaseremoteconfig\.googleapis\.com\/v1\/projects\/locket-4252a\/.+, script-path=https://raw.githubusercontent.com/Xwuan19/locket-gold-hub/main/shadowrocket/js/locket_firebase_request.js?v=20261108_26, timeout=60
+
+# 2. Script Firebase đầy đủ (chỉ để tiêm remote_filters Photobooth + AI)
+#    Script này chạy SAU premium4 nên sẽ ghi đè phần filter, còn text/popup của bạn vẫn từ premium4
+locket_rc_filters = type=http-response, pattern=^https://firebaseremoteconfig.googleapis.com/v1/projects/locket-4252a/.+, script-path=https://raw.githubusercontent.com/Xwuan19/locket-gold-hub/main/shadowrocket/js/locket_firebase_response.js?v=20261108_26, requires-body=true, max-size=-1, timeout=60
+
+# 3. Engine thực thi Photobooth + AI (quan trọng nhất)
+locket_pb_req = type=http-request, pattern=^https?:\/\/(us-central1-locket-4252a\.cloudfunctions\.net|api\.locketcamera\.com)\/generateFilteredImage, script-path=https://raw.githubusercontent.com/Xwuan19/locket-gold-hub/main/shadowrocket/js/locket_pb_req.js?v=20261108_26, requires-body=true, max-size=-1, timeout=60
+
+# 4. Locket API (huy hiệu + unblur)
+locket_api = type=http-response, pattern=^https?:\/\/api\.locketcamera\.com\/.+, script-path=https://raw.githubusercontent.com/Xwuan19/locket-gold-hub/main/shadowrocket/js/locket_filter_response.js?v=20261108_26, requires-body=true, max-size=-1, timeout=60
 
 [MITM]
-hostname = %APPEND%, api.revenuecat.com, firebaseremoteconfig.googleapis.com
+hostname = %APPEND%, api.revenuecat.com, firebaseremoteconfig.googleapis.com, api.locketcamera.com, *.locketcamera.com, us-central1-locket-4252a.cloudfunctions.net
