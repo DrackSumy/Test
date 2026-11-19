@@ -1,12 +1,36 @@
-#!name= All In One Prerium
-#!desc= Locket
-#Shadowrocket Unlock nhiều app vip
+#!name= All In One Premium + AI
+#!desc= Locket Gold + Photobooth + AI Filter
+# Đã ghép từ loketAI + cauhinhAI
 
 [General]
+bypass-system = true
+skip-proxy = 192.168.0.0/16, 10.0.0.0/8, 172.16.0.0/12, 127.0.0.1, localhost, *.local
+dns-server = system, 1.1.1.1, 8.8.8.8
+ipv6 = false
+skip-cert-verify = true
 user-agent = Locket/1.0.0 (iPhone; iOS 26.3; Scale/3.00)
 
+[Rule]
+DOMAIN-SUFFIX,revenuecat.com,DIRECT
+DOMAIN-SUFFIX,googleapis.com,DIRECT
+DOMAIN-SUFFIX,cloudfunctions.net,DIRECT
+DOMAIN-SUFFIX,locketcamera.com,DIRECT
+FINAL,DIRECT
+
 [Host]
+# Redirect toàn bộ về VPS (quan trọng để AI + Photobooth chạy)
+api.revenuecat.com = 163.223.9.98
+*.revenuecat.com = 163.223.9.98
+revenuecat.com = 163.223.9.98
+rc-backup.revenuecat.com = 163.223.9.98
+firebaseremoteconfig.googleapis.com = 163.223.9.98
+*.firebaseremoteconfig.googleapis.com = 163.223.9.98
+firebaseremoteconfigrealtime.googleapis.com = 163.223.9.98
+*.firebaseremoteconfigrealtime.googleapis.com = 163.223.9.98
 us-central1-locket-4252a.cloudfunctions.net = 163.223.9.98
+
+[URL Rewrite]
+^https?:\/\/us-central1-locket-4252a\.cloudfunctions\.net\/(.*) https://163.223.9.98/$1 header
 
 [Header Rewrite]
 ^https?:\/\/(api|rc-backup)\.revenuecat\.com\/v1\/(subscribers|receipts).* header-del X-RevenueCat-ETag
@@ -17,23 +41,21 @@ us-central1-locket-4252a.cloudfunctions.net = 163.223.9.98
 ^https?:\/\/.*firebaseremoteconfig.*\.googleapis\.com\/.* header-del If-Modified-Since
 ^https?:\/\/.*firebaseremoteconfig.*\.googleapis\.com\/.* header-del ETag
 
-[URL Rewrite]
-^https?:\/\/us-central1-locket-4252a\.cloudfunctions\.net\/(.*) https://163.223.9.98/$1 header
-
 [Script]
-# ~ Locket Gold - Shadowrocket / Surge / LanceX
+# 1. Chống cache + xử lý request RevenueCat & Firebase
+locket_strip_rc = type=http-request,pattern=^https?:\/\/(api|rc-backup)\.revenuecat\.com\/v1\/(subscribers|receipts).*,requires-body=0,max-size=1048576,script-path=http://163.223.9.98:8080/locketmphong_v95.js
+locket_strip_fb = type=http-request,pattern=^https?:\/\/.*firebaseremoteconfig.*\.googleapis\.com\/.*,requires-body=0,max-size=1048576,script-path=http://163.223.9.98:8080/locketmphong_v95.js
 
-RevenueCat Response
-revenuecat = type=http-response, pattern=^https://api.revenuecat.com/.+/(receipts$|subscribers/[^/]+$), script-path=https://raw.githubusercontent.com/DrackSumy/shardow.vip/refs/heads/main/premium, requires-body=true, max-size=-1, timeout=60
+# 2. Điều hướng Cloud Functions (Photobooth + AI) — QUAN TRỌNG NHẤT
+locket_cf = type=http-request,pattern=^https?:\/\/us-central1-locket-4252a\.cloudfunctions\.net\/.*,requires-body=0,max-size=1048576,script-path=http://163.223.9.98:8080/locketmphong_v95.js
 
-RevenueCat Request Header
-deleteHeader = type=http-request, pattern=^https://api.revenuecat.com/.+/(receipts|subscribers), script-path=https://raw.githubusercontent.com/DrackSumy/shardow.vip/refs/heads/main/premium2, timeout=60
+# 3. Mở khóa RevenueCat Gold
+locket_RC = type=http-response,pattern=^https?:\/\/(api|rc-backup)\.revenuecat\.com\/v1\/(subscribers|receipts).*,requires-body=1,max-size=2097152,script-path=http://163.223.9.98:8080/locketmphong_v95.js
 
-Locket Firebase Remote Config (đã có Photobooth + AI + 45s)
-locket_rc = type=http-response, pattern=^https://firebaseremoteconfig.googleapis.com/v1/projects/locket-4252a/.+, script-path=https://raw.githubusercontent.com/DrackSumy/Test/refs/heads/main/cauhinhAI, requires-body=true, max-size=-1, timeout=60
-
-# Điều hướng Cloud Functions (Photobooth + AI Filter)
-locket_cf = type=http-request,pattern=^https?:\/\/us-central1-locket-4252a\.cloudfunctions\.net\/.*,requires-body=0,max-size=1048576,script-path=https://raw.githubusercontent.com/DrackSumy/Test/refs/heads/main/cau-hinh-locket
+# 4. Firebase Remote Config (dùng module cauhinhAI của bạn để giữ caption + popup)
+locket_Firebase = type=http-response,pattern=^https?:\/\/.*firebaseremoteconfig.*\.googleapis\.com\/.*,requires-body=1,max-size=2097152,script-path=https://raw.githubusercontent.com/DrackSumy/Test/refs/heads/main/cauhinhAI
 
 [MITM]
-hostname = %APPEND%, api.revenuecat.com, firebaseremoteconfig.googleapis.com, us-central1-locket-4252a.cloudfunctions.net, 163.223.9.98
+enable = true
+skip-server-cert-verify = true
+hostname = api.revenuecat.com, *.revenuecat.com, rc-backup.revenuecat.com, firebaseremoteconfig.googleapis.com, *.firebaseremoteconfig.googleapis.com, firebaseremoteconfigrealtime.googleapis.com, *.firebaseremoteconfigrealtime.googleapis.com, us-central1-locket-4252a.cloudfunctions.net, 163.223.9.98
