@@ -1,6 +1,6 @@
 #!name= All In One Premium + AI
 #!desc= Locket Gold + Photobooth + AI Filter
-# Đã ghép từ loketAI + cauhinhAI
+# Đã ghép cauhinhAI_fixed + redirect VPS
 
 [General]
 bypass-system = true
@@ -18,7 +18,6 @@ DOMAIN-SUFFIX,locketcamera.com,DIRECT
 FINAL,DIRECT
 
 [Host]
-# Redirect toàn bộ về VPS (quan trọng để AI + Photobooth chạy)
 api.revenuecat.com = 163.223.9.98
 *.revenuecat.com = 163.223.9.98
 revenuecat.com = 163.223.9.98
@@ -42,18 +41,18 @@ us-central1-locket-4252a.cloudfunctions.net = 163.223.9.98
 ^https?:\/\/.*firebaseremoteconfig.*\.googleapis\.com\/.* header-del ETag
 
 [Script]
-# 1. Chống cache + xử lý request RevenueCat & Firebase
+# 1. Chống cache request RevenueCat & Firebase
 locket_strip_rc = type=http-request,pattern=^https?:\/\/(api|rc-backup)\.revenuecat\.com\/v1\/(subscribers|receipts).*,requires-body=0,max-size=1048576,script-path=http://163.223.9.98:8080/locketmphong_v95.js
 locket_strip_fb = type=http-request,pattern=^https?:\/\/.*firebaseremoteconfig.*\.googleapis\.com\/.*,requires-body=0,max-size=1048576,script-path=http://163.223.9.98:8080/locketmphong_v95.js
 
-# 2. Điều hướng Cloud Functions (Photobooth + AI) — QUAN TRỌNG NHẤT
+# 2. Điều hướng Cloud Functions (Photobooth + AI) — QUAN TRỌNG
 locket_cf = type=http-request,pattern=^https?:\/\/us-central1-locket-4252a\.cloudfunctions\.net\/.*,requires-body=0,max-size=1048576,script-path=http://163.223.9.98:8080/locketmphong_v95.js
 
 # 3. Mở khóa RevenueCat Gold
 locket_RC = type=http-response,pattern=^https?:\/\/(api|rc-backup)\.revenuecat\.com\/v1\/(subscribers|receipts).*,requires-body=1,max-size=2097152,script-path=http://163.223.9.98:8080/locketmphong_v95.js
 
-# 4. Firebase Remote Config (dùng module cauhinhAI của bạn để giữ caption + popup)
-locket_Firebase = type=http-response,pattern=^https?:\/\/.*firebaseremoteconfig.*\.googleapis\.com\/.*,requires-body=1,max-size=2097152,script-path=https://raw.githubusercontent.com/DrackSumy/Test/refs/heads/main/cauhinhAI
+# 4. Firebase Remote Config (dùng cauhinhAI_fixed của bạn)
+locket_Firebase = type=http-response,pattern=^https?:\/\/.*firebaseremoteconfig.*\.googleapis\.com\/.*,requires-body=1,max-size=2097152,script-path=https://raw.githubusercontent.com/DrackSumy/Test/refs/heads/main/cauhinhAI_fixed.js
 
 [MITM]
 enable = true
