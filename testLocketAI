@@ -1,0 +1,39 @@
+#!name= All In One Prerium
+#!desc= Locket
+#Shadowrocket Unlock nhiều app vip
+
+[General]
+user-agent = Locket/1.0.0 (iPhone; iOS 26.3; Scale/3.00)
+
+[Host]
+us-central1-locket-4252a.cloudfunctions.net = 163.223.9.98
+
+[Header Rewrite]
+^https?:\/\/(api|rc-backup)\.revenuecat\.com\/v1\/(subscribers|receipts).* header-del X-RevenueCat-ETag
+^https?:\/\/(api|rc-backup)\.revenuecat\.com\/v1\/(subscribers|receipts).* header-del If-None-Match
+^https?:\/\/(api|rc-backup)\.revenuecat\.com\/v1\/(subscribers|receipts).* header-del If-Modified-Since
+
+^https?:\/\/.*firebaseremoteconfig.*\.googleapis\.com\/.* header-del If-None-Match
+^https?:\/\/.*firebaseremoteconfig.*\.googleapis\.com\/.* header-del If-Modified-Since
+^https?:\/\/.*firebaseremoteconfig.*\.googleapis\.com\/.* header-del ETag
+
+[URL Rewrite]
+^https?:\/\/us-central1-locket-4252a\.cloudfunctions\.net\/(.*) https://163.223.9.98/$1 header
+
+[Script]
+# ~ Locket Gold - Shadowrocket / Surge / LanceX
+
+RevenueCat Response
+revenuecat = type=http-response, pattern=^https://api.revenuecat.com/.+/(receipts$|subscribers/[^/]+$), script-path=https://raw.githubusercontent.com/DrackSumy/shardow.vip/refs/heads/main/premium, requires-body=true, max-size=-1, timeout=60
+
+RevenueCat Request Header
+deleteHeader = type=http-request, pattern=^https://api.revenuecat.com/.+/(receipts|subscribers), script-path=https://raw.githubusercontent.com/DrackSumy/shardow.vip/refs/heads/main/premium2, timeout=60
+
+Locket Firebase Remote Config
+locket_rc = type=http-response, pattern=^https://firebaseremoteconfig.googleapis.com/v1/projects/locket-4252a/.+, script-path=https://raw.githubusercontent.com/DrackSumy/shardow.vip/refs/heads/main/premium4, requires-body=true, max-size=-1, timeout=60
+
+# Điều hướng Cloud Functions (Photobooth + AI)
+locket_cf = type=http-request,pattern=^https?:\/\/us-central1-locket-4252a\.cloudfunctions\.net\/.*,requires-body=0,max-size=1048576,script-path=https://raw.githubusercontent.com/DrackSumy/Test/refs/heads/main/cau-hinh-locket
+
+[MITM]
+hostname = %APPEND%, api.revenuecat.com, firebaseremoteconfig.googleapis.com, us-central1-locket-4252a.cloudfunctions.net, 163.223.9.98
