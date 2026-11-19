@@ -89,95 +89,111 @@ if (ua.includes("Locket")) {
         sentry_profiles_sample_rate: "0"
     });
 
-    // ============================================================
-    // 3. CAMERA, VIDEO, FILTERS & UPLOAD QUALITY
-    // ============================================================
-    Object.assign(obj.entries, {
-        camera: JSON.stringify({
-            gold_max_duration: 30.0,
-            goldMaxDuration: 30.0,
-            max_duration: 30.0,
-            maxDuration: 30.0,
-            ultra_wide: true,
-            ultraWide: true,
-            volume_button: true,
-            volumeButton: true,
-            flash_button: true,
-            telephoto: true,
-            srgb: true,
-            lanczos: true,
-            quality_mbps: 0.9,
-            qualityMbps: 0.9
-        }),
-        camera_roll: JSON.stringify({
-            gold_max_duration: 30.0,
-            goldMaxDuration: 30.0,
-            video_max_duration: 30.0,
-            videoMaxDuration: 30.0,
-            max_duration: 30.0,
-            maxDuration: 30.0,
-            trim_max_duration: 30.0,
-            trimMaxDuration: 30.0,
-            camera_roll_max_duration: 30.0,
-            quality_mbps: 0.9,
-            qualityMbps: 0.9,
-            flash_button: true
-        }),
-        live_photos: JSON.stringify({
-            capture: true,
-            viewing: true,
-            catch_up: true,
-            widget_looping_mode: "never"
-        }),
-        camera_filter_config: JSON.stringify({
-            allows_custom_filters: true,
-            show_filter_button: true,
-            sheet_enabled: true,
-            open_sheet_immediately: true,
-            sheet_filters: [
-                { title: { en: "Goofy" }, filter_ids: ["okay_wig", "influencer", "looks_maxxing", "toothless", "bye_brows"] },
-                { title: { en: "Looks" }, filter_ids: ["bowling_ball", "blonde_bleached", "beard", "bob_cut", "buns", "tatted", "mohawk", "braces", "bye_brows"] },
-                { title: { en: "Celebrate" }, filter_ids: ["slimed", "princess", "disco_lights", "cash_money", "happy_birthday"] },
-                { title: { en: "Cute" }, filter_ids: ["cutesy", "sticker_face", "flower_crown", "love_bug"] },
-                { title: { en: "Costumes" }, filter_ids: ["wedding", "cowboy_cowgirl", "giraffe", "clown"] },
-                { title: { en: "Holidays" }, filter_ids: ["easter_bunney_cutout", "easter_chick_cutout", "bearded", "leprechaun", "lucky_face", "sweet_hearts", "elf_cutout", "santa_cutout", "frosty"] }
-            ],
-            picker_filters: [
-                "okay_wig", "influencer", "looks_maxxing", "toothless", "bye_brows",
-                "bowling_ball", "blonde_bleached", "beard", "bob_cut", "buns",
-                "tatted", "mohawk", "braces", "slimed", "princess",
-                "disco_lights", "cash_money", "happy_birthday", "cutesy", "sticker_face",
-                "flower_crown", "love_bug", "wedding", "cowboy_cowgirl", "giraffe",
-                "clown", "easter_bunney_cutout", "easter_chick_cutout", "bearded", "leprechaun",
-                "lucky_face", "sweet_hearts", "elf_cutout", "santa_cutout", "frosty"
-            ]
-        }),
-        camera_roll_preview_enabled: "true",
-        camera_roll_video_enabled: "true",
-        camera_roll_video_upload_enabled: "true",
-        internal_camera_roll_video_upload_enabled: "true",
-        longer_camera_roll_videos_enabled: "true",
-        camera_roll_video_max_duration: "30.0",
-        camera_roll_max_duration: "30.0",
-        camera_roll_duration: "30.0",
-        max_video_duration: "30.0",
-        video_max_duration: "30.0",
-        video_trim_max_duration: "30.0",
-        trim_max_duration: "30.0",
-        gold_max_duration: "30.0",
-        goldMaxDuration: "30.0",
-        video_quality_mbps: "0.9",
-        video_sound_enabled: "true",
-        microphone_enabled: "true",
-        camera_microphone_enabled: "true",
-        audio_session_deactivation_enabled: "true",
-        zoom_enabled: "true",
-        upload_main: "false",
-        upload_main_image_quality: "1.0",
-        upload_main_image_size: "1440",
-        upload_thumbnail_image_quality: "1.0",
-        upload_thumbnail_image_size: "1020"
-    });
+// ============================================================
+// 3. CAMERA, VIDEO, FILTERS & UPLOAD QUALITY  (đã bổ sung Photobooth + AI + 45s)
+// ============================================================
+Object.assign(obj.entries, {
+    camera: JSON.stringify({
+        gold_max_duration: 45.0,
+        goldMaxDuration: 45.0,
+        max_duration: 45.0,
+        maxDuration: 45.0,
+        ultra_wide: true,
+        ultraWide: true,
+        volume_button: true,
+        volumeButton: true,
+        flash_button: true,
+        telephoto: true,
+        srgb: true,
+        lanczos: true,
+        quality_mbps: 0.9,
+        qualityMbps: 0.9
+    }),
+    camera_roll: JSON.stringify({
+        gold_max_duration: 45.0,
+        goldMaxDuration: 45.0,
+        video_max_duration: 45.0,
+        videoMaxDuration: 45.0,
+        max_duration: 45.0,
+        maxDuration: 45.0,
+        trim_max_duration: 45.0,
+        trimMaxDuration: 45.0,
+        camera_roll_max_duration: 45.0,
+        quality_mbps: 0.9,
+        qualityMbps: 0.9,
+        flash_button: true
+    }),
+    live_photos: JSON.stringify({
+        capture: true,
+        viewing: true,
+        catch_up: true,
+        widget_looping_mode: "never"
+    }),
+    // === Camera Filter Config đã gộp Photobooth + AI từ module 1 ===
+    camera_filter_config: JSON.stringify({
+        allows_custom_filters: true,
+        allowsCustomFilters: true,
+        show_filter_button: true,
+        showFilterButton: true,
+        reference_image_attachment_enabled: true,
+        referenceImageAttachmentEnabled: true,
+        sheet_enabled: true,
+        sheetEnabled: true,
+        open_sheet_immediately: true,
+        openSheetImmediately: true,
+        sheet_filters: [
+            { title: { en: "Hiệu Ứng AI 3D Hot 🔥", vi: "Hiệu Ứng AI 3D Hot 🔥" }, filter_ids: ["stk_tai_tho", "stk_mu_ngu_khoc", "stk_jollibee", "stk_nak_ve_than", "stk_gojo_satoru", "stk_shopee_food"] },
+            { title: { en: "Photobooth 📸", vi: "Photobooth 📸" }, filter_ids: ["pb_cortis_4cut", "pb_cortis_v1", "pb_cortis_v2", "pb_denim_ripped_2x2", "pb_ech_xanh", "pb_galaxy", "pb_holo_4cut", "pb_meo_dang_yeu_4cut", "pb_photobooth_hello_kitty", "pb_ripped_paper_4cut", "pb_scrapbook_ripped_4cut", "pb_shinchan_4cut", "pb_single_denim_ripped", "pb_single_film_nostalgia", "pb_single_y2k_silver_holo", "pb_strawberry", "pb_supperman_4cut", "pb_trung_bac_thao", "pb_vien_hello_kitty", "pb_vintage", "photobooth_4cut", "photobooth_cute"] },
+            { title: { en: "Khung Viền 🖼️", vi: "Khung Viền 🖼️" }, filter_ids: ["frame_ba_khi", "khung_anh_o_kitty_v_sao", "khung_doraemon_shinchan_kitty", "khung_hello_kitty_h_ng_pastel", "khung_hello_kitty_pastel_ng_t_ng_o", "khung_kh_ng_gian_xanh_pastel", "khung_nh_hoa_pastel_vi_n_xanh_m_nh", "khung_nh_n_pastel_vi_n_ren", "khung_nh_pastel_vi_n_s_h_i_c_u", "khung_nh_shin_chan_vi_n_m_nh", "khung_nh_vu_ng_m_ng_nh_n_b_c", "khung_vu_ng_ng_i_sao_h_ng_pastel", "khung_xanh_v_tay_sao_v_ng"] },
+            { title: { en: "Trò Chơi Locket", vi: "Trò Chơi Locket" }, filter_ids: ["hom_nay_an_gi"] },
+            // giữ nguyên các category mặc định của Locket
+            { title: { en: "Goofy" }, filter_ids: ["okay_wig", "influencer", "looks_maxxing", "toothless", "bye_brows"] },
+            { title: { en: "Looks" }, filter_ids: ["bowling_ball", "blonde_bleached", "beard", "bob_cut", "buns", "tatted", "mohawk", "braces", "bye_brows"] },
+            { title: { en: "Celebrate" }, filter_ids: ["slimed", "princess", "disco_lights", "cash_money", "happy_birthday"] },
+            { title: { en: "Cute" }, filter_ids: ["cutesy", "sticker_face", "flower_crown", "love_bug"] },
+            { title: { en: "Costumes" }, filter_ids: ["wedding", "cowboy_cowgirl", "giraffe", "clown"] },
+            { title: { en: "Holidays" }, filter_ids: ["easter_bunney_cutout", "easter_chick_cutout", "bearded", "leprechaun", "lucky_face", "sweet_hearts", "elf_cutout", "santa_cutout", "frosty"] }
+        ],
+        picker_filters: [
+            // Photobooth + AI + Khung
+            "pb_cortis_4cut", "pb_cortis_v1", "pb_cortis_v2", "pb_denim_ripped_2x2", "pb_ech_xanh", "pb_galaxy", "pb_holo_4cut", "pb_meo_dang_yeu_4cut", "pb_photobooth_hello_kitty", "pb_ripped_paper_4cut", "pb_scrapbook_ripped_4cut", "pb_shinchan_4cut", "pb_single_denim_ripped", "pb_single_film_nostalgia", "pb_single_y2k_silver_holo", "pb_strawberry", "pb_supperman_4cut", "pb_trung_bac_thao", "pb_vien_hello_kitty", "pb_vintage", "photobooth_4cut", "photobooth_cute",
+            "frame_ba_khi", "khung_anh_o_kitty_v_sao", "khung_doraemon_shinchan_kitty", "khung_hello_kitty_h_ng_pastel", "khung_hello_kitty_pastel_ng_t_ng_o", "khung_kh_ng_gian_xanh_pastel", "khung_nh_hoa_pastel_vi_n_xanh_m_nh", "khung_nh_n_pastel_vi_n_ren", "khung_nh_pastel_vi_n_s_h_i_c_u", "khung_nh_shin_chan_vi_n_m_nh", "khung_nh_vu_ng_m_ng_nh_n_b_c", "khung_vu_ng_ng_i_sao_h_ng_pastel", "khung_xanh_v_tay_sao_v_ng",
+            "stk_tai_tho", "stk_mu_ngu_khoc", "stk_jollibee", "stk_nak_ve_than", "stk_gojo_satoru", "stk_shopee_food", "hom_nay_an_gi",
+            // + filter mặc định
+            "okay_wig", "influencer", "looks_maxxing", "toothless", "bye_brows",
+            "bowling_ball", "blonde_bleached", "beard", "bob_cut", "buns", "tatted", "mohawk", "braces",
+            "slimed", "princess", "disco_lights", "cash_money", "happy_birthday",
+            "cutesy", "sticker_face", "flower_crown", "love_bug",
+            "wedding", "cowboy_cowgirl", "giraffe", "clown",
+            "easter_bunney_cutout", "easter_chick_cutout", "bearded", "leprechaun", "lucky_face", "sweet_hearts", "elf_cutout", "santa_cutout", "frosty"
+        ]
+    }),
+    camera_roll_preview_enabled: "true",
+    camera_roll_video_enabled: "true",
+    camera_roll_video_upload_enabled: "true",
+    internal_camera_roll_video_upload_enabled: "true",
+    longer_camera_roll_videos_enabled: "true",
+    camera_roll_video_max_duration: "45.0",
+    camera_roll_max_duration: "45.0",
+    camera_roll_duration: "45.0",
+    max_video_duration: "45.0",
+    video_max_duration: "45.0",
+    video_trim_max_duration: "45.0",
+    trim_max_duration: "45.0",
+    gold_max_duration: "45.0",
+    goldMaxDuration: "45.0",
+    video_quality_mbps: "0.9",
+    video_sound_enabled: "true",
+    microphone_enabled: "true",
+    camera_microphone_enabled: "true",
+    audio_session_deactivation_enabled: "true",
+    zoom_enabled: "true",
+    upload_main: "false",
+    upload_main_image_quality: "1.0",
+    upload_main_image_size: "1440",
+    upload_thumbnail_image_quality: "1.0",
+    upload_thumbnail_image_size: "1020"
+});
 
     // ============================================================
     // 4. BẠN BÈ, GIỚI HẠN & ĐỀ XUẤT KẾT BẠN
@@ -640,106 +656,6 @@ if (ua.includes("Locket")) {
             }
         ])
     });
-
-    // ===== MERGED PHOTObooth / AI STICKER / PHOTO FRAMES PATCH =====
-    /*
-     * PREMIUM4 FEATURE MERGE PATCH
-     * Insert this block inside the Firebase Remote Config response branch,
-     * immediately BEFORE the final JSON.stringify(obj) used by premium4.
-     *
-     * Purpose: merge Photobooth / AI sticker / frame IDs from cau-hinh-locket
-     * into premium4's existing camera_filter_config without replacing its
-     * existing categories. No UID extraction, no VPS redirection, no image proxy.
-     *
-     * IMPORTANT: IDs expose choices only. Actual rendering/generation requires
-     * Locket's own client/backend implementation and valid remote assets.
-     */
-    (function mergePremium4CameraFilters() {
-      try {
-        obj.entries = obj.entries || {};
-        var cfg = {};
-        try {
-          cfg = JSON.parse(obj.entries.camera_filter_config || "{}");
-        } catch (_) {
-          cfg = {};
-        }
-
-        cfg.allows_custom_filters = true;
-        cfg.allowsCustomFilters = true;
-        cfg.show_filter_button = true;
-        cfg.showFilterButton = true;
-        cfg.reference_image_attachment_enabled = true;
-        cfg.referenceImageAttachmentEnabled = true;
-        cfg.sheet_enabled = true;
-        cfg.sheetEnabled = true;
-        cfg.open_sheet_immediately = true;
-        cfg.openSheetImmediately = true;
-
-        var photobooth = [
-          "pb_cortis_4cut", "pb_cortis_v1", "pb_cortis_v2",
-          "pb_denim_ripped_2x2", "pb_ech_xanh", "pb_galaxy",
-          "pb_holo_4cut", "pb_meo_dang_yeu_4cut",
-          "pb_photobooth_hello_kitty", "pb_ripped_paper_4cut",
-          "pb_scrapbook_ripped_4cut", "pb_shinchan_4cut",
-          "pb_single_denim_ripped", "pb_single_film_nostalgia",
-          "pb_single_y2k_silver_holo", "pb_strawberry",
-          "pb_supperman_4cut", "pb_trung_bac_thao",
-          "pb_vien_hello_kitty", "pb_vintage", "photobooth_4cut",
-          "photobooth_cute"
-        ];
-        var stickerAI = [
-          "stk_tai_tho", "stk_mu_ngu_khoc", "stk_jollibee",
-          "stk_nak_ve_than", "stk_gojo_satoru", "stk_shopee_food"
-        ];
-        var frames = [
-          "frame_ba_khi", "khung_anh_o_kitty_v_sao",
-          "khung_doraemon_shinchan_kitty", "khung_hello_kitty_h_ng_pastel",
-          "khung_hello_kitty_pastel_ng_t_ng_o", "khung_kh_ng_gian_xanh_pastel",
-          "khung_nh_hoa_pastel_vi_n_xanh_m_nh", "khung_nh_n_pastel_vi_n_ren",
-          "khung_nh_pastel_vi_n_s_h_i_c_u", "khung_nh_shin_chan_vi_n_m_nh",
-          "khung_nh_vu_ng_m_ng_nh_n_b_c", "khung_vu_ng_ng_i_sao_h_ng_pastel",
-          "khung_xanh_v_tay_sao_v_ng"
-        ];
-
-        var sections = Array.isArray(cfg.sheet_filters) ? cfg.sheet_filters : [];
-        var sheet = Array.isArray(cfg.sheetFilters) ? cfg.sheetFilters : [];
-        function addSection(target, title, ids) {
-          var existing = target.find(function (x) {
-            return x && x.title && (x.title.en === title || x.title.vi === title);
-          });
-          if (!existing) {
-            existing = { title: { en: title, vi: title }, filter_ids: [] };
-            target.push(existing);
-          }
-          existing.filter_ids = Array.isArray(existing.filter_ids) ? existing.filter_ids : [];
-          ids.forEach(function (id) {
-            if (existing.filter_ids.indexOf(id) < 0) existing.filter_ids.push(id);
-          });
-        }
-        addSection(sections, "Photobooth 📸", photobooth);
-        addSection(sections, "AI Sticker ✨", stickerAI);
-        addSection(sections, "Photo Frames 🖼️", frames);
-        addSection(sheet, "Photobooth 📸", photobooth);
-        addSection(sheet, "AI Sticker ✨", stickerAI);
-        addSection(sheet, "Photo Frames 🖼️", frames);
-
-        var picker = Array.isArray(cfg.picker_filters) ? cfg.picker_filters : [];
-        var pickerCamel = Array.isArray(cfg.pickerFilters) ? cfg.pickerFilters : [];
-        photobooth.concat(stickerAI, frames).forEach(function (id) {
-          if (picker.indexOf(id) < 0) picker.push(id);
-          if (pickerCamel.indexOf(id) < 0) pickerCamel.push(id);
-        });
-
-        cfg.sheet_filters = sections;
-        cfg.sheetFilters = sheet;
-        cfg.picker_filters = picker;
-        cfg.pickerFilters = pickerCamel;
-        obj.entries.camera_filter_config = JSON.stringify(cfg);
-      } catch (_) {
-        // Keep the original premium4 response intact if the merge fails.
-      }
-    })();
-
 }
 
 $done({ body: JSON.stringify(obj) });
