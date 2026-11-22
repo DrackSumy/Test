@@ -26,7 +26,15 @@ if (ua.includes("Locket")) {
             remove_ads: "enabled",
             video: "enabled",
             custom_widget_frames: "enabled",
-            streak_recovery: "enabled"
+            streak_recovery: "enabled",
+            camera_filter_sheet: "enabled",
+            camera_filters: "enabled",
+            camera_filter: "enabled",
+            filters: "enabled",
+            filter: "enabled",
+            ai_filters: "enabled",
+            ai_filter: "enabled",
+            photo_filters: "enabled"
         }),
         upsell_features: JSON.stringify({
             app_icon_picker: true,
