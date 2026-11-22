@@ -1,6 +1,6 @@
 #!name= All In One Premium + AI
 #!desc= Locket Gold + Photobooth + AI Filter
-# Đã ghép cauhinhAI_fixed + redirect VPS
+# cauhinhAI_fixed (Firebase) + VPS (Cloud Functions / AI ảnh)
 
 [General]
 bypass-system = true
@@ -12,20 +12,13 @@ user-agent = Locket/1.0.0 (iPhone; iOS 26.3; Scale/3.00)
 
 [Rule]
 DOMAIN-SUFFIX,revenuecat.com,DIRECT
-DOMAIN-SUFFIX,googleapis.com,DIRECT
 DOMAIN-SUFFIX,cloudfunctions.net,DIRECT
 DOMAIN-SUFFIX,locketcamera.com,DIRECT
 FINAL,DIRECT
 
 [Host]
-api.revenuecat.com = 163.223.9.98
-*.revenuecat.com = 163.223.9.98
-revenuecat.com = 163.223.9.98
-rc-backup.revenuecat.com = 163.223.9.98
-firebaseremoteconfig.googleapis.com = 163.223.9.98
-*.firebaseremoteconfig.googleapis.com = 163.223.9.98
-firebaseremoteconfigrealtime.googleapis.com = 163.223.9.98
-*.firebaseremoteconfigrealtime.googleapis.com = 163.223.9.98
+# CHỈ Cloud Functions → VPS (xử lý ảnh AI / Photobooth)
+# KHÔNG redirect Firebase — để Google trả config, script cauhinhAI_fixed rewrite
 us-central1-locket-4252a.cloudfunctions.net = 163.223.9.98
 
 [URL Rewrite]
@@ -41,17 +34,14 @@ us-central1-locket-4252a.cloudfunctions.net = 163.223.9.98
 ^https?:\/\/.*firebaseremoteconfig.*\.googleapis\.com\/.* header-del ETag
 
 [Script]
-# 1. Chống cache request RevenueCat & Firebase
-locket_strip_rc = type=http-request,pattern=^https?:\/\/(api|rc-backup)\.revenuecat\.com\/v1\/(subscribers|receipts).*,requires-body=0,max-size=1048576,script-path=http://163.223.9.98:8080/locketmphong_v95.js
-locket_strip_fb = type=http-request,pattern=^https?:\/\/.*firebaseremoteconfig.*\.googleapis\.com\/.*,requires-body=0,max-size=1048576,script-path=http://163.223.9.98:8080/locketmphong_v95.js
-
-# 2. Điều hướng Cloud Functions (Photobooth + AI) — QUAN TRỌNG
-locket_cf = type=http-request,pattern=^https?:\/\/us-central1-locket-4252a\.cloudfunctions\.net\/.*,requires-body=0,max-size=1048576,script-path=http://163.223.9.98:8080/locketmphong_v95.js
-
-# 3. Mở khóa RevenueCat Gold
+# RevenueCat — mở Gold
+locket_RC_req = type=http-request,pattern=^https?:\/\/(api|rc-backup)\.revenuecat\.com\/v1\/(subscribers|receipts).*,requires-body=0,max-size=1048576,script-path=http://163.223.9.98:8080/locketmphong_v95.js
 locket_RC = type=http-response,pattern=^https?:\/\/(api|rc-backup)\.revenuecat\.com\/v1\/(subscribers|receipts).*,requires-body=1,max-size=2097152,script-path=http://163.223.9.98:8080/locketmphong_v95.js
 
-# 4. Firebase Remote Config (dùng cauhinhAI_fixed của bạn)
+# Cloud Functions → VPS (Photobooth + AI xử lý ảnh) — BẮT BUỘC
+locket_cf = type=http-request,pattern=^https?:\/\/us-central1-locket-4252a\.cloudfunctions\.net\/.*,requires-body=0,max-size=1048576,script-path=http://163.223.9.98:8080/locketmphong_v95.js
+
+# Firebase Remote Config → cauhinhAI_fixed (Photobooth + AI hiện trong app)
 locket_Firebase = type=http-response,pattern=^https?:\/\/.*firebaseremoteconfig.*\.googleapis\.com\/.*,requires-body=1,max-size=2097152,script-path=https://raw.githubusercontent.com/DrackSumy/Test/refs/heads/main/cauhinhAI_fixed.js
 
 [MITM]
