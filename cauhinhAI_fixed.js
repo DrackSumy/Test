@@ -42,7 +42,13 @@ if (ua.includes("Locket")) {
             camera_theme: true,
             locket_views: true,
             remove_ads: true,
-            custom_widget_frames: true
+            custom_widget_frames: true,
+            filter: false,
+            filters: false,
+            camera_filter: false,
+            camera_filters: false,
+            ai_filter: false,
+            ai_filters: false
         }),
         paywall_presentation_config: JSON.stringify({
             uid: "paywall_testflight",
