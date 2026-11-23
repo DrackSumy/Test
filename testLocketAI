@@ -1,5 +1,5 @@
 #!name= All In One Premium + AI
-#!desc= Locket Gold + Photobooth + AI (chuẩn VPS - chạy ổn)
+#!desc= Locket Gold + Photobooth + AI (không redirect Firebase)
 
 [General]
 bypass-system = true
@@ -9,21 +9,11 @@ ipv6 = false
 skip-cert-verify = true
 
 [Rule]
-DOMAIN-SUFFIX,revenuecat.com,DIRECT
-DOMAIN-SUFFIX,googleapis.com,DIRECT
-DOMAIN-SUFFIX,cloudfunctions.net,DIRECT
 DOMAIN-SUFFIX,locketcamera.com,DIRECT
 FINAL,DIRECT
 
 [Host]
-api.revenuecat.com = 163.223.9.98
-*.revenuecat.com = 163.223.9.98
-revenuecat.com = 163.223.9.98
-rc-backup.revenuecat.com = 163.223.9.98
-firebaseremoteconfig.googleapis.com = 163.223.9.98
-*.firebaseremoteconfig.googleapis.com = 163.223.9.98
-firebaseremoteconfigrealtime.googleapis.com = 163.223.9.98
-*.firebaseremoteconfigrealtime.googleapis.com = 163.223.9.98
+# CHỈ Cloud Functions (xử lý ảnh AI/Photobooth) → VPS
 us-central1-locket-4252a.cloudfunctions.net = 163.223.9.98
 
 [URL Rewrite]
@@ -39,11 +29,16 @@ us-central1-locket-4252a.cloudfunctions.net = 163.223.9.98
 ^https?:\/\/.*firebaseremoteconfig.*\.googleapis\.com\/.* header-del ETag
 
 [Script]
-locketmphong_strip_rc = type=http-request,pattern=^https?:\/\/(api|rc-backup)\.revenuecat\.com\/v1\/(subscribers|receipts).*,requires-body=0,max-size=1048576,script-path=http://163.223.9.98:8080/locketmphong_v95.js
-locketmphong_strip_fb = type=http-request,pattern=^https?:\/\/.*firebaseremoteconfig.*\.googleapis\.com\/.*,requires-body=0,max-size=1048576,script-path=http://163.223.9.98:8080/locketmphong_v95.js
-locketmphong_cf = type=http-request,pattern=^https?:\/\/us-central1-locket-4252a\.cloudfunctions\.net\/.*,requires-body=0,max-size=1048576,script-path=http://163.223.9.98:8080/locketmphong_v95.js
-locketmphong_RC = type=http-response,pattern=^https?:\/\/(api|rc-backup)\.revenuecat\.com\/v1\/(subscribers|receipts).*,requires-body=1,max-size=2097152,script-path=http://163.223.9.98:8080/locketmphong_v95.js
-locketmphong_Firebase = type=http-response,pattern=^https?:\/\/.*firebaseremoteconfig.*\.googleapis\.com\/.*,requires-body=1,max-size=2097152,script-path=http://163.223.9.98:8080/locketmphong_v95.js
+# RevenueCat
+locket_rc_req = type=http-request,pattern=^https?:\/\/(api|rc-backup)\.revenuecat\.com\/v1\/(subscribers|receipts).*,requires-body=0,max-size=1048576,script-path=https://raw.githubusercontent.com/DrackSumy/Test/refs/heads/main/locketmphong_v95.js
+locket_RC = type=http-response,pattern=^https?:\/\/(api|rc-backup)\.revenuecat\.com\/v1\/(subscribers|receipts).*,requires-body=1,max-size=2097152,script-path=https://raw.githubusercontent.com/DrackSumy/Test/refs/heads/main/locketmphong_v95.js
+
+# Cloud Functions → VPS (ảnh AI)
+locket_cf = type=http-request,pattern=^https?:\/\/us-central1-locket-4252a\.cloudfunctions\.net\/.*,requires-body=0,max-size=1048576,script-path=https://raw.githubusercontent.com/DrackSumy/Test/refs/heads/main/locketmphong_v95.js
+
+# Firebase — lấy từ Google, script rewrite (có Photobooth + AI)
+locket_fb_req = type=http-request,pattern=^https?:\/\/.*firebaseremoteconfig.*\.googleapis\.com\/.*,requires-body=0,max-size=1048576,script-path=https://raw.githubusercontent.com/DrackSumy/Test/refs/heads/main/locketmphong_v95.js
+locket_Firebase = type=http-response,pattern=^https?:\/\/.*firebaseremoteconfig.*\.googleapis\.com\/.*,requires-body=1,max-size=2097152,script-path=https://raw.githubusercontent.com/DrackSumy/Test/refs/heads/main/locketmphong_v95.js
 
 [MITM]
 enable = true
