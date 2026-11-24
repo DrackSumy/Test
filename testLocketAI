@@ -1,46 +1,32 @@
-#!name= All In One Premium + AI
-#!desc= Locket Gold + Photobooth + AI (không redirect Firebase)
-
 [General]
-bypass-system = true
-skip-proxy = 192.168.0.0/16, 10.0.0.0/8, 172.16.0.0/12, 127.0.0.1, localhost, *.local
-dns-server = system, 1.1.1.1, 8.8.8.8
-ipv6 = false
-skip-cert-verify = true
+update-url = https://dinhduyvinh.tech/i/LocketGold_by_duyvinh09_d8b96e0228aae0a5fd84c259310fac5ea1e90720c0a2f96fecf64f9e86a01b08.sgmodule
 
 [Rule]
-DOMAIN-SUFFIX,locketcamera.com,DIRECT
-FINAL,DIRECT
-
-[Host]
-# CHỈ Cloud Functions (xử lý ảnh AI/Photobooth) → VPS
-us-central1-locket-4252a.cloudfunctions.net = 163.223.9.98
+AND,((DOMAIN,api.locketcamera.com),(PROTOCOL,UDP),(DEST-PORT,443)),REJECT
+AND,((DOMAIN,us-central1-locket-4252a.cloudfunctions.net),(PROTOCOL,UDP),(DEST-PORT,443)),REJECT
+AND,((DOMAIN,firebaseremoteconfig.googleapis.com),(PROTOCOL,UDP),(DEST-PORT,443)),REJECT
 
 [URL Rewrite]
-^https?:\/\/us-central1-locket-4252a\.cloudfunctions\.net\/(.*) https://163.223.9.98/$1 header
-
-[Header Rewrite]
-^https?:\/\/(api|rc-backup)\.revenuecat\.com\/v1\/(subscribers|receipts).* header-del X-RevenueCat-ETag
-^https?:\/\/(api|rc-backup)\.revenuecat\.com\/v1\/(subscribers|receipts).* header-del If-None-Match
-^https?:\/\/(api|rc-backup)\.revenuecat\.com\/v1\/(subscribers|receipts).* header-del If-Modified-Since
-
-^https?:\/\/.*firebaseremoteconfig.*\.googleapis\.com\/.* header-del If-None-Match
-^https?:\/\/.*firebaseremoteconfig.*\.googleapis\.com\/.* header-del If-Modified-Since
-^https?:\/\/.*firebaseremoteconfig.*\.googleapis\.com\/.* header-del ETag
+^https:\/\/api\.locketcamera\.com\/generateFilteredImage 'https://locket.dinhduyvinh.tech/generateFilteredImage' 307
 
 [Script]
-# RevenueCat
-locket_rc_req = type=http-request,pattern=^https?:\/\/(api|rc-backup)\.revenuecat\.com\/v1\/(subscribers|receipts).*,requires-body=0,max-size=1048576,script-path=https://raw.githubusercontent.com/DrackSumy/Test/refs/heads/main/locketmphong_v95.js
-locket_RC = type=http-response,pattern=^https?:\/\/(api|rc-backup)\.revenuecat\.com\/v1\/(subscribers|receipts).*,requires-body=1,max-size=2097152,script-path=https://raw.githubusercontent.com/DrackSumy/Test/refs/heads/main/locketmphong_v95.js
+# RevenueCat - script hiện tại
+locket_revenuecat = type=http-response, pattern=^https:\/\/api\.revenuecat\.com\/.+\/(receipts|subscribers), script-path=https://locket.dinhduyvinh.tech/js/Locket_Duyvinh09.js, requires-body=true, max-size=-1, timeout=60
 
-# Cloud Functions → VPS (ảnh AI)
-locket_cf = type=http-request,pattern=^https?:\/\/us-central1-locket-4252a\.cloudfunctions\.net\/.*,requires-body=0,max-size=1048576,script-path=https://raw.githubusercontent.com/DrackSumy/Test/refs/heads/main/locketmphong_v95.js
+# Xóa header cache
+locket_delete_header = type=http-request, pattern=^https:\/\/(api\.revenuecat\.com|firebaseremoteconfig\.googleapis\.com)\/.+, script-path=https://locket.dinhduyvinh.tech/js/deleteHeader.js, timeout=60
 
-# Firebase — lấy từ Google, script rewrite (có Photobooth + AI)
-locket_fb_req = type=http-request,pattern=^https?:\/\/.*firebaseremoteconfig.*\.googleapis\.com\/.*,requires-body=0,max-size=1048576,script-path=https://raw.githubusercontent.com/DrackSumy/Test/refs/heads/main/locketmphong_v95.js
-locket_Firebase = type=http-response,pattern=^https?:\/\/.*firebaseremoteconfig.*\.googleapis\.com\/.*,requires-body=1,max-size=2097152,script-path=https://raw.githubusercontent.com/DrackSumy/Test/refs/heads/main/locketmphong_v95.js
+# Firebase Remote Config
+locket_unlocked = type=http-response, pattern=^https:\/\/firebaseremoteconfig\.googleapis\.com\/.+, script-path=https://locket.dinhduyvinh.tech/js/Locket_Unlocked.js?widget_frame=https%3A%2F%2Fi.ibb.co%2F1Yt1Dzzy%2FShin-chan-1.png, requires-body=true, max-size=-1, timeout=60
+
+# AI Filter / Photobooth
+locket_filters = type=http-request, pattern=^https:\/\/(api\.locketcamera\.com|us-central1-locket-4252a\.cloudfunctions\.net)\/(?:[^?#]*\/)?generateFilteredImage(?:\?.*)?$, script-path=https://locket.dinhduyvinh.tech/js/Locket_Filters.js, requires-body=true, max-size=-1, timeout=120
+
+# Quote / Breaking News captions
+locket_captions = type=http-request, pattern=^https:\/\/(api\.locketcamera\.com|us-central1-locket-4252a\.cloudfunctions\.net)\/(?:[^?#]*\/)?generateCaption(?:\?.*)?$, script-path=https://locket.dinhduyvinh.tech/js/Locket_Filters.js, requires-body=true, max-size=-1, timeout=35
 
 [MITM]
+ca-passphrase = RzwKjlEO
+ca-p12 = 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
 enable = true
-skip-server-cert-verify = true
-hostname = api.revenuecat.com, *.revenuecat.com, rc-backup.revenuecat.com, firebaseremoteconfig.googleapis.com, *.firebaseremoteconfig.googleapis.com, firebaseremoteconfigrealtime.googleapis.com, *.firebaseremoteconfigrealtime.googleapis.com, us-central1-locket-4252a.cloudfunctions.net, 163.223.9.98
+hostname = %APPEND% api.locketcamera.com, us-central1-locket-4252a.cloudfunctions.net, firebaseremoteconfig.googleapis.com, api.revenuecat.com
